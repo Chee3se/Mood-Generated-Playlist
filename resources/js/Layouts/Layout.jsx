@@ -9,12 +9,15 @@ export default function Layout ({ auth, children }) {
                     <img src="/spotify.png" className='w-10'/>
                     <Link href='/' className='font-bold text-lg pl-3'>Home</Link>
                 </div>
+                <div>
+                    <Link href={route('generate')} className='font-bold text-lg pl-3'>Generate</Link>
+                </div>
                 <div className='flex flex-row gap-4 items-center justify-end'>
                     <Link href='/login' className='font-bold text-lg pl-3'>Login</Link>
                     <Link href='/register' className='font-bold text-lg pl-3'>Register</Link>
                 </div>
             </nav>
-            <main className=''>
+            <main className='bg-gradient-to-b from-gray-900 to-black min-h-screen'>
                 {children}
             </main>
         </div>
