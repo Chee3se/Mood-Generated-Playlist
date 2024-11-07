@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {Head, Link} from "@inertiajs/react";
 import Layout from '../Layouts/Layout';
 
-const Home = () => {
+const Home = ({auth}) => {
     const [currentEmotion, setCurrentEmotion] = useState(0);
     const emotions = [
         { emoji: "😊", text: "HAPPY", color: "text-green-400", music: "Upbeat Pop" },
@@ -19,7 +19,7 @@ const Home = () => {
     }, []);
 
     return (
-        <Layout>
+        <Layout auth={auth}>
             <Head title="Home" />
             <div className="relative min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
                 {/* Hero Section */}

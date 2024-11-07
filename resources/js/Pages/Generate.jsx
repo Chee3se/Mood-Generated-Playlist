@@ -2,7 +2,7 @@ import Layout from "@/Layouts/Layout.jsx";
 
 export default function Generate({ auth }) {
     return (
-        <Layout>
+        <Layout auth={auth}>
             <div>
 
             </div>
