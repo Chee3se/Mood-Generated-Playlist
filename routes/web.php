@@ -10,6 +10,8 @@ Route::get('/', function () {
     return Inertia::render('Home');
 })->name('home');
 
-Route::get('/generate', [GenerationController::class, 'index'])->name('generate');
+Route::middleware('auth')->group(function () {
+    Route::get('/generate', [GenerationController::class, 'index'])->name('generate');
+});
 
 require __DIR__.'/auth.php';

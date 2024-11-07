@@ -13,7 +13,7 @@ export default function Layout ({ auth, children }) {
                     <Link href={route('generate')} className='font-bold text-lg pl-3'>Generate</Link>
                 </div>
                 <div className='flex flex-row gap-4 items-center justify-end'>
-                    {auth.user ? (
+                    {auth?.user ? (
                         <div className='flex flex-row gap-4 items-center'>
                             <span className='font-bold'>{auth.user.name}</span>
                             <Link href={route('logout')} method='post' as='button' className='font-bold text-lg pl-3'>Logout</Link>
