@@ -71,13 +71,13 @@ const Home = () => {
 
                         {/* CTA Section - Spotify Style */}
                         <div className="space-y-6">
-                            <button className="bg-green-500 hover:bg-green-400 text-black text-xl px-12 py-4 rounded-full font-bold transition-all duration-300 hover:scale-105">
-                                Start Listening Now
-                            </button>
+                            <a href="/login">
+                                <button className="bg-green-500 hover:bg-green-400 text-black text-xl px-12 py-4 rounded-full font-bold transition-all duration-300 hover:scale-105">
+                                    Start Listening Now
+                                </button>
+                            </a>
 
-                            <p className="text-sm text-gray-400">
-                                Join thousands of users discovering music through emotions
-                            </p>
+
                         </div>
                     </div>
                 </div>
