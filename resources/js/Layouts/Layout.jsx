@@ -7,7 +7,7 @@ export default function Layout ({ auth, children }) {
 
                 <div className='flex flex-row gap-4 items-center'>
                     <img src="/spotify.png" className='w-10'/>
-                    <Link href='/' className='font-bold text-lg pl-3'>Nigga</Link>
+                    <Link href='/' className='font-bold text-lg pl-3'>Home</Link>
                 </div>
                 <div className='flex flex-row gap-4 items-center justify-end'>
                     <Link href='/login' className='font-bold text-lg pl-3'>Login</Link>
