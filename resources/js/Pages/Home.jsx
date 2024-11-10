@@ -21,11 +21,10 @@ const Home = ({auth}) => {
     return (
         <Layout auth={auth}>
             <Head title="Home" />
-            <div className="relative min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
+            <div>
                 {/* Hero Section */}
                 <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
                     {/* Spotify-style gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-green-900/20 to-black opacity-60" />
 
                     {/* Main Content */}
                     <div className="mt-20 relative z-9 text-center px-4 max-w-5xl mx-auto">
@@ -71,7 +70,7 @@ const Home = ({auth}) => {
 
                         {/* CTA Section - Spotify Style */}
                         <div className="space-y-6">
-                            <a href="/login">
+                            <a href={route('generate')}>
                                 <button className="bg-green-500 hover:bg-green-400 text-black text-xl px-12 py-4 rounded-full font-bold transition-all duration-300 hover:scale-105">
                                     Start Listening Now
                                 </button>
