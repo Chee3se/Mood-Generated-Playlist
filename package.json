@@ -21,6 +21,7 @@
         "vite": "^5.0"
     },
     "dependencies": {
-        "lucide-react": "^0.454.0"
+        "lucide-react": "^0.454.0",
+        "spotify-web-api-node": "^5.0.2"
     }
 }
