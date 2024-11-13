@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SpotifyWebApi from 'spotify-web-api-node';
 import { Music, ExternalLink } from 'lucide-react';
+import axios from 'axios'; // Make sure to install axios if you haven't
 
 export default function SpotifySearch({ token, emotion }) {
     const [playlists, setPlaylists] = useState([]);
@@ -11,7 +12,7 @@ export default function SpotifySearch({ token, emotion }) {
         try {
             const spotifyApi = new SpotifyWebApi();
             spotifyApi.setAccessToken(token);
-            const response = await spotifyApi.searchPlaylists(emotion, { limit: 3 });
+            const response = await spotifyApi.searchPlaylists(emotion, { limit: 5 });
             setPlaylists(response.body.playlists.items);
         } catch (error) {
             console.error('Error fetching playlists: ', error);
@@ -20,13 +21,22 @@ export default function SpotifySearch({ token, emotion }) {
         }
     };
 
-    const cleanDescription = (description) => {
-        // Remove URLs from the description
-        const urlPattern = /https?:\/\/[^\s]+/g;
-        const cleanedDescription = description ? description.replace(urlPattern, '').trim() : "No description";
+    // New function to save to history
+    const saveToHistory = async (playlistUrl) => {
+        try {
+            await axios.post('/history', {
+                emotion: emotion,
+                album_link: playlistUrl
+            });
+        } catch (error) {
+            console.error('Error saving to history:', error);
+        }
+    };
 
-        // If cleaned description is empty after removing links, return "No description"
-        return cleanedDescription || "No description";
+    // Modified click handler for playlist links
+    const handlePlaylistClick = (playlist) => {
+        const playlistUrl = `spotify:playlist:${playlist.id}`;
+        saveToHistory(playlistUrl);
     };
 
     return (
@@ -48,6 +58,7 @@ export default function SpotifySearch({ token, emotion }) {
                             href={`spotify:playlist:${playlist.id}`}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={() => handlePlaylistClick(playlist)}
                             className="block p-4 bg-gray-900 hover:bg-gray-800 rounded-lg transition-all transform hover:scale-102 group"
                         >
                             <div className="flex items-start space-x-4">
@@ -70,7 +81,7 @@ export default function SpotifySearch({ token, emotion }) {
                                         <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-green-500" />
                                     </div>
                                     <p className="text-sm text-gray-400 mt-1 line-clamp-2">
-                                        {cleanDescription(playlist.description)}
+                                        {playlist.description.replace(/<[^>]*>?/gm, '') || "No description"}
                                     </p>
                                     <div className="text-xs text-gray-500 mt-2">
                                         {playlist.tracks.total} tracks • By {playlist.owner.display_name}
