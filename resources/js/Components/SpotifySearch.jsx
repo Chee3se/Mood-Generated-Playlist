@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SpotifyWebApi from 'spotify-web-api-node';
 import { Music, ExternalLink } from 'lucide-react';
+import axios from 'axios'; // Make sure to install axios if you haven't
 
 export default function SpotifySearch({ token, emotion }) {
     const [playlists, setPlaylists] = useState([]);
@@ -18,6 +19,24 @@ export default function SpotifySearch({ token, emotion }) {
         } finally {
             setIsLoading(false);
         }
+    };
+
+    // New function to save to history
+    const saveToHistory = async (playlistUrl) => {
+        try {
+            await axios.post('/history', {
+                emotion: emotion,
+                album_link: playlistUrl
+            });
+        } catch (error) {
+            console.error('Error saving to history:', error);
+        }
+    };
+
+    // Modified click handler for playlist links
+    const handlePlaylistClick = (playlist) => {
+        const playlistUrl = `spotify:playlist:${playlist.id}`;
+        saveToHistory(playlistUrl);
     };
 
     return (
@@ -39,6 +58,7 @@ export default function SpotifySearch({ token, emotion }) {
                             href={`spotify:playlist:${playlist.id}`}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={() => handlePlaylistClick(playlist)}
                             className="block p-4 bg-gray-900 hover:bg-gray-800 rounded-lg transition-all transform hover:scale-102 group"
                         >
                             <div className="flex items-start space-x-4">

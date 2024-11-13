@@ -14,7 +14,13 @@ Route::get('/', function () {
 
 Route::middleware(['auth', CheckSpotifyToken::class])->group(function () {
     Route::get('/generate', [GenerationController::class, 'index'])->name('generate');
+
+
+});
+
+Route::middleware('auth')->group(function () {
     Route::get('/history', [HistoryController::class, 'index'])->name('history');
+    Route::post('/history', [HistoryController::class, 'store'])->middleware('auth');
 });
 
 Route::middleware('auth')->group(function () {
