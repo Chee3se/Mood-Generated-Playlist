@@ -24,4 +24,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/analyze/image', [GenerationController::class, 'analyzeImage'])->name('analyze.image');
 });
 
+Route::post('/emotion', [GenerationController::class, 'store'])->name('emotion.store');
+
 require __DIR__.'/auth.php';

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EmotionDetected;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
@@ -23,10 +25,17 @@ class GenerationController extends Controller
             'image' => 'required|image',
         ]);
 
-        $response = Http::asMultipart()->post('localhost:5002/analyze', [
+        $response = Http::asMultipart()->post('localhost:6000/analyze', [
             'image' => fopen($request->file('image')->getPathname(), 'r'),
         ]);
 
         return $response->json('emotion');
+    }
+
+    public function store(Request $request)
+    {
+        $emotion = $request->input('emotion');
+        event(new EmotionDetected($emotion));
+        return response()->json(['status' => 'success']);
     }
 }
