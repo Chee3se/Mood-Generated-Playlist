@@ -21,7 +21,7 @@ class CheckSpotifyToken
     {
         $clientId = env('SPOTIFY_CLIENT_ID');
         $clientSecret = env('SPOTIFY_CLIENT_SECRET');
-        $response = Http::asForm()->post('https://accounts.spotify.com/api/token', [
+        $response = Http::asForm()->withOptions(['verify' => false])->post('https://accounts.spotify.com/api/token', [
             'grant_type' => 'client_credentials',
             'client_id' => $clientId,
             'client_secret' => $clientSecret,
