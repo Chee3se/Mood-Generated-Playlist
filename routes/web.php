@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\GenerationController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\CheckSpotifyToken;
 use Illuminate\Foundation\Application;
@@ -13,6 +14,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth', CheckSpotifyToken::class])->group(function () {
     Route::get('/generate', [GenerationController::class, 'index'])->name('generate');
+    Route::get('/history', [HistoryController::class, 'index'])->name('history');
 });
 
 Route::middleware('auth')->group(function () {

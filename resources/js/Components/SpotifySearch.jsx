@@ -11,22 +11,13 @@ export default function SpotifySearch({ token, emotion }) {
         try {
             const spotifyApi = new SpotifyWebApi();
             spotifyApi.setAccessToken(token);
-            const response = await spotifyApi.searchPlaylists(emotion, { limit: 3 });
+            const response = await spotifyApi.searchPlaylists(emotion, { limit: 5 });
             setPlaylists(response.body.playlists.items);
         } catch (error) {
             console.error('Error fetching playlists: ', error);
         } finally {
             setIsLoading(false);
         }
-    };
-
-    const cleanDescription = (description) => {
-        // Remove URLs from the description
-        const urlPattern = /https?:\/\/[^\s]+/g;
-        const cleanedDescription = description ? description.replace(urlPattern, '').trim() : "No description";
-
-        // If cleaned description is empty after removing links, return "No description"
-        return cleanedDescription || "No description";
     };
 
     return (
@@ -70,7 +61,7 @@ export default function SpotifySearch({ token, emotion }) {
                                         <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-green-500" />
                                     </div>
                                     <p className="text-sm text-gray-400 mt-1 line-clamp-2">
-                                        {cleanDescription(playlist.description)}
+                                        {playlist.description.replace(/<[^>]*>?/gm, '') || "No description"}
                                     </p>
                                     <div className="text-xs text-gray-500 mt-2">
                                         {playlist.tracks.total} tracks • By {playlist.owner.display_name}

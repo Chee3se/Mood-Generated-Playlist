@@ -55,6 +55,7 @@ export default function Layout({ auth, children }) {
                             <div className="hidden md:flex flex-row gap-6">
                                 <NavLink routeName="home">Home</NavLink>
                                 <NavLink routeName="generate">Generate</NavLink>
+                                <NavLink routeName="history">History</NavLink>
                             </div>
                         </div>
 
@@ -93,6 +94,7 @@ export default function Layout({ auth, children }) {
                     <div className="px-4 py-2 space-y-1 bg-black/80 backdrop-blur-md">
                         <NavLink routeName="home">Home</NavLink>
                         <NavLink routeName="generate">Generate</NavLink>
+                        <NavLink routeName="history">History</NavLink>
                         {auth?.user ? (
                             <>
                                 <NavLink routeName="profile.edit">Profile</NavLink>
