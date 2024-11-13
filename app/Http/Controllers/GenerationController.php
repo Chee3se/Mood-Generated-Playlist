@@ -25,7 +25,7 @@ class GenerationController extends Controller
             'image' => 'required|image',
         ]);
 
-        $response = Http::asMultipart()->post('localhost:6000/analyze', [
+        $response = Http::asMultipart()->withOptions(['verify'=>false])->post('https://e439-80-232-160-70.ngrok-free.app', [
             'image' => fopen($request->file('image')->getPathname(), 'r'),
         ]);
 

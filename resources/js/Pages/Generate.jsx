@@ -21,7 +21,7 @@ export default function Generate({ auth, spotify_access_token }) {
 
     return (
         <Layout auth={auth}>
-            <div className="min-h-screen flex justify-center items-center flex-col">
+            <div className="min-h-screen flex justify-center items-center flex-col space-y-5">
                 <ImageInput setEmotion={setEmotion} />
                 <EmotionInput emotion={emotion} setEmotion={setEmotion} />
                 <SpotifySearch token={spotify_access_token} emotion={emotion} />
