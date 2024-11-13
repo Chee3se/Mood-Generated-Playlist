@@ -1,12 +1,20 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export default function VideoInput() {
     const videoRef = useRef(null);
     const wsRef = useRef(null);
+    const [emotion, setEmotion] = useState('');
 
     useEffect(() => {
         // Open WebSocket connection
-        wsRef.current = new WebSocket('ws://localhost:6000');
+        wsRef.current = new WebSocket('ws://localhost:6500');
+
+        wsRef.current.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.emotion) {
+                setEmotion(data.emotion);
+            }
+        };
 
         // Get access to the user's webcam
         navigator.mediaDevices.getUserMedia({ video: true })
@@ -40,6 +48,7 @@ export default function VideoInput() {
     return (
         <div className="video-input">
             <video ref={videoRef} className="w-full h-auto" />
+            <p>Detected Emotion: {emotion}</p>
         </div>
     );
 }
