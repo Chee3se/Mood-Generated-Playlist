@@ -16,6 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->references('id')->on('users');
             $table->string('emotion');
             $table->text('album_link')->nullable();
+            $table->text('album_name')->nullable();
+            $table->text('img')->nullable();
+            $table->boolean('is_favorite')->default(false);
             $table->timestamps();
         });
     }
@@ -26,5 +29,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('histories');
+        Schema::table('histories', function (Blueprint $table) {
+            $table->dropColumn('is_favorite');
+        });
     }
 };

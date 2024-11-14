@@ -21,6 +21,8 @@ Route::middleware(['auth', CheckSpotifyToken::class])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/history', [HistoryController::class, 'index'])->name('history');
     Route::post('/history', [HistoryController::class, 'store'])->middleware('auth');
+    Route::post('/history/{history}/toggle-favorite', [HistoryController::class, 'toggleFavorite'])
+        ->name('history.toggle-favorite');
 });
 
 Route::middleware('auth')->group(function () {

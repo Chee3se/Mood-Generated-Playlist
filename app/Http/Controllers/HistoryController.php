@@ -25,14 +25,26 @@ class HistoryController
         $validated = $request->validate([
             'emotion' => 'required|string',
             'album_link' => 'required|string',
+            'album_name' => 'required|string',
+            'img' => 'required|string',
         ]);
 
         $history = History::create([
             'user_id' => auth()->id(), // Assumes you're using authentication
             'emotion' => $validated['emotion'],
             'album_link' => $validated['album_link'],
+            'album_name' => $validated['album_name'],
+            'img' => $validated['img'],
         ]);
 
         return response()->json($history, 201);
+    }
+
+    public function toggleFavorite(History $history)
+    {
+        $history->is_favorite = !$history->is_favorite;
+        $history->save();
+
+        return back();
     }
 }

@@ -22,21 +22,24 @@ export default function SpotifySearch({ token, emotion }) {
     };
 
     // New function to save to history
-    const saveToHistory = async (playlistUrl) => {
+    const saveToHistory = async (playlistUrl, playlistName, playlistImage) => {
         try {
             await axios.post('/history', {
                 emotion: emotion,
-                album_link: playlistUrl
+                album_link: playlistUrl,
+                album_name: playlistName,
+                img: playlistImage
             });
         } catch (error) {
             console.error('Error saving to history:', error);
         }
     };
 
-    // Modified click handler for playlist links
+// Modified click handler for playlist links
     const handlePlaylistClick = (playlist) => {
         const playlistUrl = `spotify:playlist:${playlist.id}`;
-        saveToHistory(playlistUrl);
+        const imageUrl = playlist.images && playlist.images[0] ? playlist.images[0].url : '';
+        saveToHistory(playlistUrl, playlist.name, imageUrl);
     };
 
     return (
