@@ -1,9 +1,13 @@
-import React, { useEffect, useState, useCallback, memo } from 'react';
+import React, { useEffect, useState, useCallback, useRef, memo } from 'react';
 import VideoFeed from './VideoFeed';
+import VideoControl from './VideoControl';
 
 const VideoInput = memo(({ show, setEmotion }) => {
     const [reconnectAttempts, setReconnectAttempts] = useState(0);
     const [socketConnected, setSocketConnected] = useState(false);
+    const [recording, setRecording] = useState(false);
+    const emotionsRef = useRef([]);
+    const intervalIdRef = useRef(null);
 
     const attemptReconnect = useCallback(() => {
         if (reconnectAttempts < 5) {
@@ -23,13 +27,12 @@ const VideoInput = memo(({ show, setEmotion }) => {
 
     const handleEmotionResult = useCallback((data) => {
         console.log('Emotion detected:', data.emotion);
-        setEmotion(prev => {
-            if (prev !== data.emotion) {
-                return data.emotion;
-            }
-            return prev;
-        });
-    }, [setEmotion]);
+        if (data.emotion) {
+            emotionsRef.current.push(data.emotion);
+        } else {
+            console.warn('Received undefined emotion:', data);
+        }
+    }, []);
 
     const handleSocketConnect = useCallback(() => {
         console.log('Socket connected');
@@ -71,16 +74,41 @@ const VideoInput = memo(({ show, setEmotion }) => {
     }, [handleEmotionResult, handleSocketConnect, handleSocketDisconnect, handleSocketError]);
 
     const handleFrameCaptured = useCallback((arrayBuffer) => {
-        if (socketConnected) {
+        if (socketConnected && recording) {
             window.Echo.connector.socket.emit('video_frame', arrayBuffer);
         } else {
-            console.warn('Socket is not connected. Frame not sent.');
+            console.warn('Socket is not connected or recording is not started. Frame not sent.');
         }
-    }, [socketConnected]);
+    }, [socketConnected, recording]);
+
+    const startRecording = () => {
+        setRecording(true);
+        emotionsRef.current = [];
+        intervalIdRef.current = setTimeout(() => {
+            setRecording(false);
+            if (emotionsRef.current.length > 0) {
+                const mostFrequentEmotion = emotionsRef.current.sort((a, b) =>
+                    emotionsRef.current.filter(emotion => emotion === a).length - emotionsRef.current.filter(emotion => emotion === b).length
+                ).pop();
+                setEmotion(mostFrequentEmotion);
+            } else {
+                console.warn('No emotions recorded during the interval.');
+            }
+        }, 5000);
+    };
+
+    useEffect(() => {
+        return () => {
+            if (intervalIdRef.current) {
+                clearTimeout(intervalIdRef.current);
+            }
+        };
+    }, []);
 
     return (
-        <div className="video-input">
+        <div className="video-input flex justify-center items-center flex-col gap-4">
             {show && <VideoFeed onFrameCaptured={handleFrameCaptured} />}
+            {show && <VideoControl onStart={startRecording} />}
         </div>
     );
 });
