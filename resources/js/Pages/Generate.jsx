@@ -55,7 +55,7 @@ export default function Generate({ auth, spotify_access_token }) {
                     </button>
                 </div>
                 {renderInputMethod()}
-                <VideoInput show={inputMethod === 'video'} />
+                <VideoInput show={inputMethod === 'video'} setEmotion={setEmotion} />
                 <EmotionInput emotion={emotion} setEmotion={setEmotion} />
                 <SpotifySearch token={spotify_access_token} emotion={emotion} />
             </div>
