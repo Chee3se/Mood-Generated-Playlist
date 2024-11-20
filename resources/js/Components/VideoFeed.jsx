@@ -41,8 +41,8 @@ export default function VideoFeed({ onFrameCaptured }) {
 
     return (
         <div className="video-feed">
-            <video ref={videoRef} width="640" height="480" autoPlay style={{ borderRadius: '10px' }}></video>
-            <canvas ref={canvasRef} width="640" height="480" style={{ display: 'none' }}></canvas>
+            <video className="rounded-xl border-2 border-dashed border-gray-600 bg-gray-700" ref={videoRef} width="500" autoPlay></video>
+            <canvas className="hidden" ref={canvasRef} width="500"></canvas>
         </div>
     );
 }
