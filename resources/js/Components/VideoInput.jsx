@@ -1,75 +1,90 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, memo } from 'react';
 import VideoFeed from './VideoFeed';
 
-export default function VideoInput({ show, setEmotion }) {
+const VideoInput = memo(({ show, setEmotion }) => {
     const [reconnectAttempts, setReconnectAttempts] = useState(0);
     const [socketConnected, setSocketConnected] = useState(false);
 
-    useEffect(() => {
-        const attemptReconnect = () => {
-            if (reconnectAttempts < 5) {
-                setTimeout(() => {
-                    console.log(`Reconnection attempt ${reconnectAttempts + 1}`);
-                    try {
-                        window.Echo.connector.socket.connect();
-                        setReconnectAttempts(reconnectAttempts + 1);
-                    } catch (error) {
-                        console.error('Socket reconnection error:', error);
-                    }
-                }, Math.pow(2, reconnectAttempts) * 1000); // Exponential backoff
-            } else {
-                console.error('Max reconnection attempts reached');
+    const attemptReconnect = useCallback(() => {
+        if (reconnectAttempts < 5) {
+            setTimeout(() => {
+                console.log(`Reconnection attempt ${reconnectAttempts + 1}`);
+                try {
+                    window.Echo.connector.socket.connect();
+                    setReconnectAttempts(prev => prev + 1);
+                } catch (error) {
+                    console.error('Socket reconnection error:', error);
+                }
+            }, Math.pow(2, reconnectAttempts) * 1000);
+        } else {
+            console.error('Max reconnection attempts reached');
+        }
+    }, [reconnectAttempts]);
+
+    const handleEmotionResult = useCallback((data) => {
+        console.log('Emotion detected:', data.emotion);
+        setEmotion(prev => {
+            if (prev !== data.emotion) {
+                return data.emotion;
             }
-        };
+            return prev;
+        });
+    }, [setEmotion]);
 
-        // Listen for emotion results
+    const handleSocketConnect = useCallback(() => {
+        console.log('Socket connected');
+        setSocketConnected(true);
+        setReconnectAttempts(0);
+    }, []);
+
+    const handleSocketDisconnect = useCallback(() => {
+        console.log('Socket disconnected');
+        setSocketConnected(false);
+    }, []);
+
+    const handleSocketError = useCallback((error) => {
+        console.error('Socket connection error:', error);
+        setSocketConnected(false);
+        attemptReconnect();
+    }, [attemptReconnect]);
+
+    useEffect(() => {
         try {
-            window.Echo.connector.socket.on('emotion_result', (data) => {
-                console.log('Emotion detected:', data.emotion);
-                setEmotion(data.emotion);
-            });
+            const socket = window.Echo.connector.socket;
 
-            // Handle socket connection events
-            window.Echo.connector.socket.on('connect', () => {
-                console.log('Socket connected');
-                setSocketConnected(true);
-                setReconnectAttempts(0); // Reset reconnection attempts on successful connection
-            });
+            // Set up event listeners
+            socket.on('emotion_result', handleEmotionResult);
+            socket.on('connect', handleSocketConnect);
+            socket.on('disconnect', handleSocketDisconnect);
+            socket.on('connect_error', handleSocketError);
 
-            window.Echo.connector.socket.on('disconnect', () => {
-                console.log('Socket disconnected');
-                setSocketConnected(false);
-            });
-
-            window.Echo.connector.socket.on('connect_error', (error) => {
-                console.error('Socket connection error:', error);
-                setSocketConnected(false);
-                attemptReconnect();
-            });
+            // Clean up
+            return () => {
+                socket.off('emotion_result', handleEmotionResult);
+                socket.off('connect', handleSocketConnect);
+                socket.off('disconnect', handleSocketDisconnect);
+                socket.off('connect_error', handleSocketError);
+            };
         } catch (error) {
             console.error('Socket initialization error:', error);
         }
+    }, [handleEmotionResult, handleSocketConnect, handleSocketDisconnect, handleSocketError]);
 
-        // Clean up when component unmounts
-        return () => {
-            window.Echo.connector.socket.off('emotion_result');
-            window.Echo.connector.socket.off('connect');
-            window.Echo.connector.socket.off('disconnect');
-            window.Echo.connector.socket.off('connect_error');
-        };
-    }, [reconnectAttempts]);
-
-    const handleFrameCaptured = (arrayBuffer) => {
+    const handleFrameCaptured = useCallback((arrayBuffer) => {
         if (socketConnected) {
             window.Echo.connector.socket.emit('video_frame', arrayBuffer);
         } else {
             console.warn('Socket is not connected. Frame not sent.');
         }
-    };
+    }, [socketConnected]);
 
     return (
         <div className="video-input">
             {show && <VideoFeed onFrameCaptured={handleFrameCaptured} />}
         </div>
     );
-}
+});
+
+VideoInput.displayName = 'VideoInput';
+
+export default VideoInput;
