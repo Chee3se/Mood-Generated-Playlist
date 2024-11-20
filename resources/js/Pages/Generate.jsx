@@ -41,7 +41,7 @@ export default function Generate({ auth, spotify_access_token }) {
                                 : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-700 hover:border-zinc-600'
                         }`}
                     >
-                        Image Method
+                        Image
                     </button>
                     <button
                         onClick={() => setInputMethod('video')}
@@ -51,7 +51,7 @@ export default function Generate({ auth, spotify_access_token }) {
                                 : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-700 hover:border-zinc-600'
                         }`}
                     >
-                        Video Method
+                        Video
                     </button>
                 </div>
                 {renderInputMethod()}
