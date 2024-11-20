@@ -8,7 +8,6 @@ import VideoInput from "@/Components/VideoInput.jsx";
 export default function Generate({ auth, spotify_access_token }) {
     const [emotion, setEmotion] = useState('');
     const [inputMethod, setInputMethod] = useState('image');
-    const [showVideo, setShowVideo] = useState(false);
 
     useEffect(() => {
         window.Echo.channel('emotion-channel')
@@ -21,19 +20,8 @@ export default function Generate({ auth, spotify_access_token }) {
         };
     }, []);
 
-    useEffect(() => {
-        // Add a small delay when switching to video to ensure proper cleanup
-        if (inputMethod === 'video') {
-            setTimeout(() => setShowVideo(true), 100);
-        } else {
-            setShowVideo(false);
-        }
-    }, [inputMethod]);
-
     const renderInputMethod = () => {
         switch (inputMethod) {
-            case 'video':
-                return showVideo ? <VideoInput /> : null;
             case 'image':
                 return <ImageInput setEmotion={setEmotion} />;
             default:
@@ -67,6 +55,7 @@ export default function Generate({ auth, spotify_access_token }) {
                     </button>
                 </div>
                 {renderInputMethod()}
+                <VideoInput show={inputMethod === 'video'} />
                 <EmotionInput emotion={emotion} setEmotion={setEmotion} />
                 <SpotifySearch token={spotify_access_token} emotion={emotion} />
             </div>

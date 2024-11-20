@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import VideoFeed from './VideoFeed';
 
-export default function VideoInput() {
+export default function VideoInput({ show }) {
     const [emotion, setEmotion] = useState('');
     const [reconnectAttempts, setReconnectAttempts] = useState(0);
     const [socketConnected, setSocketConnected] = useState(false);
@@ -70,7 +70,7 @@ export default function VideoInput() {
 
     return (
         <div className="video-input">
-            <VideoFeed onFrameCaptured={handleFrameCaptured} />
+            {show && <VideoFeed onFrameCaptured={handleFrameCaptured} />}
             <p>Detected Emotion: {emotion}</p>
         </div>
     );

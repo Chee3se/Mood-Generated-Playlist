@@ -5,5 +5,6 @@ window.io = io;
 
 window.Echo = new Echo({
     broadcaster: 'socket.io',
-    host: window.location.protocol + '//' + window.location.hostname + ':6500'
+    host: window.location.protocol + '//' + window.location.hostname + ':6500',
+    transports: ['websocket'],
 });
