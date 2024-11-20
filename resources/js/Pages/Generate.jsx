@@ -32,32 +32,32 @@ export default function Generate({ auth, spotify_access_token }) {
     return (
         <Layout auth={auth}>
             <div className="min-h-screen flex justify-center items-center flex-col space-y-5">
-                <div className="flex space-x-4 mb-4">
+                <div className="flex items-center gap-4 mb-4">
                     <button
                         onClick={() => setInputMethod('image')}
-                        className={`px-4 py-2 rounded-lg transition-colors ${
+                        className={`px-6 py-3 rounded-full font-semibold text-sm tracking-wide transition-all duration-300 transform hover:scale-105 ${
                             inputMethod === 'image'
-                                ? 'bg-blue-500 text-white'
-                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                ? 'bg-green-500 hover:bg-green-400 text-black shadow-lg'
+                                : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-700 hover:border-zinc-600'
                         }`}
                     >
                         Image Method
                     </button>
                     <button
                         onClick={() => setInputMethod('video')}
-                        className={`px-4 py-2 rounded-lg transition-colors ${
+                        className={`px-6 py-3 rounded-full font-semibold text-sm tracking-wide transition-all duration-300 transform hover:scale-105 ${
                             inputMethod === 'video'
-                                ? 'bg-blue-500 text-white'
-                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                ? 'bg-green-500 hover:bg-green-400 text-black shadow-lg'
+                                : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-700 hover:border-zinc-600'
                         }`}
                     >
                         Video Method
                     </button>
                 </div>
                 {renderInputMethod()}
-                <VideoInput show={inputMethod === 'video'} setEmotion={setEmotion} />
-                <EmotionInput emotion={emotion} setEmotion={setEmotion} />
-                <SpotifySearch token={spotify_access_token} emotion={emotion} />
+                <VideoInput show={inputMethod === 'video'} setEmotion={setEmotion}/>
+                <EmotionInput emotion={emotion} setEmotion={setEmotion}/>
+                <SpotifySearch token={spotify_access_token} emotion={emotion}/>
             </div>
         </Layout>
     );
