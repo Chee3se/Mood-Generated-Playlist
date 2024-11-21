@@ -4,6 +4,7 @@ import SpotifySearch from "@/Components/SpotifySearch.jsx";
 import EmotionInput from "@/Components/EmotionInput.jsx";
 import ImageInput from "@/Components/ImageInput.jsx";
 import VideoInput from "@/Components/VideoInput.jsx";
+import {Head} from "@inertiajs/react";
 
 export default function Generate({ auth, spotify_access_token }) {
     const [emotion, setEmotion] = useState('');
@@ -31,6 +32,7 @@ export default function Generate({ auth, spotify_access_token }) {
 
     return (
         <Layout auth={auth}>
+            <Head title="Generate"/>
             <div className="min-h-screen flex justify-center items-center flex-col space-y-5">
                 <div className="flex items-center gap-4 mb-4">
                     <button

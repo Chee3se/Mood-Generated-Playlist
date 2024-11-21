@@ -31,7 +31,7 @@ export default function VideoFeed({ onFrameCaptured }) {
             });
         };
 
-        const intervalId = setInterval(captureFrame, 1000); // Capture a frame every second
+        const intervalId = setInterval(captureFrame, 500); // Capture a frame every second
 
         // Clean up when component unmounts
         return () => {
