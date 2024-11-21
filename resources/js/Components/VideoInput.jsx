@@ -94,7 +94,7 @@ const VideoInput = memo(({ show, setEmotion }) => {
             } else {
                 console.warn('No emotions recorded during the interval.');
             }
-        }, 5000);
+        }, 5100);
     };
 
     useEffect(() => {

@@ -5,7 +5,6 @@ export default function VideoFeed({ onFrameCaptured }) {
     const canvasRef = useRef(null);
 
     useEffect(() => {
-        // Access the user's webcam
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(stream => {
                 videoRef.current.srcObject = stream;
@@ -15,11 +14,21 @@ export default function VideoFeed({ onFrameCaptured }) {
                 console.error('Error accessing webcam:', err);
             });
 
-        // Capture frames and send to parent component
         const captureFrame = () => {
-            const context = canvasRef.current.getContext('2d');
-            context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
-            canvasRef.current.toBlob(blob => {
+            const video = videoRef.current;
+            const canvas = canvasRef.current;
+            const context = canvas.getContext('2d');
+
+            // Calculate the correct dimensions to maintain aspect ratio
+            const aspectRatio = video.videoWidth / video.videoHeight;
+            const width = canvas.width;
+            const height = width / aspectRatio;
+
+            // Set canvas height to maintain aspect ratio
+            canvas.height = height;
+
+            context.drawImage(video, 0, 0, width, height);
+            canvas.toBlob(blob => {
                 if (blob) {
                     const reader = new FileReader();
                     reader.onload = () => {
@@ -31,9 +40,8 @@ export default function VideoFeed({ onFrameCaptured }) {
             });
         };
 
-        const intervalId = setInterval(captureFrame, 500); // Capture a frame every second
+        const intervalId = setInterval(captureFrame, 1000);
 
-        // Clean up when component unmounts
         return () => {
             clearInterval(intervalId);
         };
