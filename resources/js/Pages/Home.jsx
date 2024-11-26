@@ -30,7 +30,7 @@ const Home = ({auth}) => {
                     <div className="mt-20 relative z-9 text-center px-4 max-w-5xl mx-auto">
                         <div className="mb-8">
                             <h1 className="text-lg md:text-7xl font-bold mb-4 tracking-tight">
-                                Feel the
+                                Feel
                                 <span className={`block transition-colors duration-500 ${emotions[currentEmotion].color}`}>
                                     {emotions[currentEmotion].text}
                                 </span>
